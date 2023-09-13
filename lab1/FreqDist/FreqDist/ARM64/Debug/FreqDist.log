@@ -1,0 +1,3 @@
+﻿  FreqDist.cpp
+C:\Programming Files\computer-security\lab1\FreqDist\FreqDist\FreqDist.cpp(47,14): warning C4018: '>=': signed/unsigned mismatch
+  FreqDist.vcxproj -> C:\Programming Files\computer-security\lab1\FreqDist\ARM64\Debug\FreqDist.exe
