@@ -1,0 +1,9 @@
+﻿  FreqDist.cpp
+C:\Programming Files\computer-security\lab1\FreqDist\FreqDist\FreqDist.cpp(55,18): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+C:\Programming Files\computer-security\lab1\FreqDist\FreqDist\FreqDist.cpp(100,14): warning C4018: '>=': signed/unsigned mismatch
+  Generating code
+  3 of 156 functions ( 1.9%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    10 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  FreqDist.vcxproj -> C:\Programming Files\computer-security\lab1\FreqDist\x64\Release\FreqDist.exe

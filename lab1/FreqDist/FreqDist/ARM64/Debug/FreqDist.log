@@ -1,3 +1,4 @@
 ﻿  FreqDist.cpp
-C:\Programming Files\computer-security\lab1\FreqDist\FreqDist\FreqDist.cpp(47,14): warning C4018: '>=': signed/unsigned mismatch
+C:\Programming Files\computer-security\lab1\FreqDist\FreqDist\FreqDist.cpp(55,18): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+C:\Programming Files\computer-security\lab1\FreqDist\FreqDist\FreqDist.cpp(78,14): warning C4018: '>=': signed/unsigned mismatch
   FreqDist.vcxproj -> C:\Programming Files\computer-security\lab1\FreqDist\ARM64\Debug\FreqDist.exe

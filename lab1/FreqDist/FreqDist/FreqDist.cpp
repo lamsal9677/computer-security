@@ -26,12 +26,12 @@ void printHorizonalLine();
 
 int main() {
 	//declaring the variables from the command line
-	int scale = 1;
-	int logScale = false;
+	int scale = 20;
 	int nFlag = 0;
 	int aFlag = 0;
 	int rFlag = 0;
-	string fileName = "Shakespeare.txt";
+	int lFlag = 0;
+	string fileName = "Hamlet.txt";
 
 
 	unsigned int count[256] = {0}; // Array to store the count of each character
@@ -50,13 +50,42 @@ int main() {
 		count[(unsigned char)ch]++; // Cast to unsigned char to ensure we don't access negative indexes.
 	projFile.close(); // Close the file
 
+	if (lFlag == 1) {
+		for (int i = 0; i <= 255; i++) {
+			count[i] = log(count[i]);
+		}
+	}
+
 	/* 
 	Find the maximum Repeated in the array and scale down the graph
 	*/
 	unsigned int maxRepeated = 0; // Variable to store the maximum repeated
-	for (int i = 0; i < 256; i++) // Find the maximum repeated
-		maxRepeated = (count[i] > maxRepeated) ? count[i] : maxRepeated; // If count[i] is greater than maxRepeated, set maxRepeated to count[i]
+	unsigned int minRepeated = 4294967295; // Variable to store the minimum repeated
+	unsigned int maxChar;
+	unsigned long long sum = 0;
+	double average = 0;
+
+	for (int i = 0; i < 256; i++) { // Find the maximum repeated
+		cout << i << ": " << count[i] << endl;
+		sum = sum + count[i];
+		// If count[i] is greater than maxRepeated, set maxRepeated to count[i]
+		if (count[i] > maxRepeated) {
+			maxRepeated = count[i];
+			maxChar = i;
+		}
+
+		if (count[i] > 0) {
+			if (count[i] < minRepeated) {
+				minRepeated = count[i];
+			}
+		}
+	}
+	cout << "Sum: " << sum << endl;
+	average = (double)sum / 256;
+
+
 	double scaleFactor = (double)scale / maxRepeated; // Calculate the scale factor
+
 	for (int i = 0; i <= 255; i++) // Scale down the count of each character
 		c2[i] = static_cast<int>(ceil(count[i] * scaleFactor)); // Round up the scaled down count and store in c2
 
@@ -77,7 +106,6 @@ int main() {
 		std::cout << endl;
 	}
 
-
 	printHorizonalLine(); // Print the horizontal line
 	if(nFlag == 1) {
 		printNumberScale(); // Print the number scale
@@ -85,9 +113,25 @@ int main() {
 	if(aFlag == 1) {
 		printASCIIScale();	// Print the ASCII scale
 	}
+	
+	cout << endl;
+	
+	double variance = 0.0;
+	double standDev = 0.0;
+	unsigned long long countSumSq = 0;
+	unsigned long long countSumSqTotal = 0;
+	for (int i = 0; i < 256; i++) {
+		countSumSq = countSumSq + (count[i] * count[i]);
+	}
+	countSumSqTotal = sum * sum;
+	variance = static_cast<double>(countSumSq - (countSumSqTotal / 256)) / 256;
+	standDev = sqrt(variance);
+
+	cout << "MIN:" <<minRepeated<<" MAX  "<< "("<<maxChar<<"):" <<maxRepeated<< " AVG:" << average << " DEV:" << standDev;
+
 	return 0;
 }
-
+/////////////////////////////////////////////////////////correct this///////////////////////////////////
 /*
 printNumberScale function takes in no input and prints the number scale
 */
