@@ -24,15 +24,47 @@ void printASCIIScale();
 void printHorizonalLine();
 
 
-int main() {
-	//declaring the variables from the command line
-	int scale = 20;
-	int nFlag = 0;
-	int aFlag = 0;
-	int rFlag = 0;
-	int lFlag = 0;
-	string fileName = "Hamlet.txt";
+int main(int argc, char* argv[]) {
+	
+		//declaring the variables from the command line
+		int scale = 20;
+		int nFlag = 0;
+		int aFlag = 0;
+		int rFlag = 0;
+		int lFlag = 0;
+		string fileName = "";
 
+		for (int i = 1; i < argc; i++) {
+			string arg = argv[i];
+
+			if (arg.substr(0, 1) == "-") {
+				if (arg == "-a")
+					aFlag = 1;
+				else if (arg == "-n")
+					nFlag = 1;
+				else if (arg == "-l")
+					lFlag = 1;
+				else if (arg.length() > 2 && arg.substr(0, 2) == "-r") {
+					scale = stoi(arg.substr(2));
+					if (scale == 0) {
+						cerr << "Scale is zero" << endl;
+						return 1;
+					}
+				}
+				else {
+					cerr << "Invalid Argument" << endl;
+					return 1;
+				}
+			}
+			else {
+				fileName = arg;
+				if (fileName.compare("") == 0) {
+					cerr << "Filename can't be Empty";
+					return 1;
+				}
+			}
+				
+		}
 
 	unsigned int count[256] = {0}; // Array to store the count of each character
 	unsigned int c2[256] = {0}; // Array to store the scaled down count of each character
@@ -66,7 +98,7 @@ int main() {
 	double average = 0;
 
 	for (int i = 0; i < 256; i++) { // Find the maximum repeated
-		cout << i << ": " << count[i] << endl;
+		//cout << i << ": " << count[i] << endl;
 		sum = sum + count[i];
 		// If count[i] is greater than maxRepeated, set maxRepeated to count[i]
 		if (count[i] > maxRepeated) {
@@ -80,7 +112,7 @@ int main() {
 			}
 		}
 	}
-	cout << "Sum: " << sum << endl;
+	//cout << "Sum: " << sum << endl;
 	average = (double)sum / 256;
 
 
@@ -123,25 +155,30 @@ int main() {
 	for (int i = 0; i < 256; i++) {
 		countSumSq = countSumSq + (count[i] * count[i]);
 	}
+
 	countSumSqTotal = sum * sum;
 	variance = static_cast<double>(countSumSq - (countSumSqTotal / 256)) / 256;
 	standDev = sqrt(variance);
+	//cout << "countSumSq: " << countSumSq << endl;
+	//cout << "countSumSqTotal: " << countSumSqTotal << endl;
+	//cout << "(countSumSqTotal / 256):" << (countSumSqTotal / 256) << endl;
 
+	//cout << "countSumSq - (countSumSqTotal / 256):" << countSumSq - (countSumSqTotal / 256) << endl;
 	cout << "MIN:" <<minRepeated<<" MAX  "<< "("<<maxChar<<"):" <<maxRepeated<< " AVG:" << average << " DEV:" << standDev;
 
 	return 0;
 }
-/////////////////////////////////////////////////////////correct this///////////////////////////////////
 /*
 printNumberScale function takes in no input and prints the number scale
 */
+
 void printNumberScale() {
 	std::cout << "|";
 	//Printing the number
 	for (int i = 0; i <= 255; i++) {
 		int hundreds = i / 100;
-		int tens = (i / 10) % 10;
-		int ones = i % 10;
+		//int tens = (i / 10) % 10;
+		//int ones = i % 10;
 
 		if (hundreds == 0) {
 			std::cout << " ";
@@ -155,9 +192,9 @@ void printNumberScale() {
 	std::cout << endl;
 	std::cout << "|";
 	for (int i = 0; i <= 255; i++) {
-		int hundreds = i / 100;
+		//int hundreds = i / 100;
 		int tens = (i / 10) % 10;
-		int ones = i % 10;
+		//int ones = i % 10;
 
 		if (i < 10 && tens == 0) {
 			std::cout << " ";
@@ -171,8 +208,8 @@ void printNumberScale() {
 	std::cout << endl;
 	std::cout << "|";
 	for (int i = 0; i <= 255; i++) {
-		int hundreds = i / 100;
-		int tens = (i / 10) % 10;
+		//int hundreds = i / 100;
+		//int tens = (i / 10) % 10;
 		int ones = i % 10;
 
 		// Display all the ones in one row
