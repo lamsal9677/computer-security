@@ -14,6 +14,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <iomanip>
+
 
 //using the standard namespace
 using namespace std;
@@ -22,49 +24,52 @@ using namespace std;
 void printNumberScale();
 void printASCIIScale();
 void printHorizonalLine();
+double stndrdDev(unsigned int count[]);
 
 
 int main(int argc, char* argv[]) {
 	
-		//declaring the variables from the command line
-		int scale = 20;
-		int nFlag = 0;
-		int aFlag = 0;
-		int rFlag = 0;
-		int lFlag = 0;
-		string fileName = "";
+	//declaring the variables from the command line
+	int scale = 20;
+	int nFlag = 0;
+	int aFlag = 0;
+	int rFlag = 0;
+	int lFlag = 0;
+	int gFlag = 0;
+	string fileName = "";
 
-		for (int i = 1; i < argc; i++) {
-			string arg = argv[i];
+	for (int i = 1; i < argc; i++) {
+		string arg = argv[i];
 
-			if (arg.substr(0, 1) == "-") {
-				if (arg == "-a")
-					aFlag = 1;
-				else if (arg == "-n")
-					nFlag = 1;
-				else if (arg == "-l")
-					lFlag = 1;
-				else if (arg.length() > 2 && arg.substr(0, 2) == "-r") {
-					scale = stoi(arg.substr(2));
-					if (scale == 0) {
-						cerr << "Scale is zero" << endl;
-						return 1;
-					}
-				}
-				else {
-					cerr << "Invalid Argument" << endl;
+		if (arg.substr(0, 1) == "-") {
+			if (arg == "-a")
+				aFlag = 1;
+			else if (arg == "-n")
+				nFlag = 1;
+			else if (arg == "-l")
+				lFlag = 1;
+			else if (arg == "-g")
+				gFlag = 1;
+			else if (arg.length() > 2 && arg.substr(0, 2) == "-r") {
+				scale = stoi(arg.substr(2));
+				if (scale == 0) {
+					cerr << "Scale is zero" << endl;
 					return 1;
 				}
 			}
 			else {
-				fileName = arg;
-				if (fileName.compare("") == 0) {
-					cerr << "Filename can't be Empty";
-					return 1;
-				}
+				cerr << "Invalid Argument" << endl;
+				return 1;
 			}
-				
 		}
+		else {
+			fileName = arg;
+			if (fileName.compare("") == 0) {
+				cerr << "Filename can't be Empty";
+				return 1;
+			}
+		}	
+	}
 
 	unsigned int count[256] = {0}; // Array to store the count of each character
 	unsigned int c2[256] = {0}; // Array to store the scaled down count of each character
@@ -99,6 +104,7 @@ int main(int argc, char* argv[]) {
 
 	for (int i = 0; i < 256; i++) { // Find the maximum repeated
 		//cout << i << ": " << count[i] << endl;
+		cout << count[i] << endl;
 		sum = sum + count[i];
 		// If count[i] is greater than maxRepeated, set maxRepeated to count[i]
 		if (count[i] > maxRepeated) {
@@ -114,63 +120,85 @@ int main(int argc, char* argv[]) {
 	}
 	//cout << "Sum: " << sum << endl;
 	average = (double)sum / 256;
-
-
 	double scaleFactor = (double)scale / maxRepeated; // Calculate the scale factor
-
 	for (int i = 0; i <= 255; i++) // Scale down the count of each character
 		c2[i] = static_cast<int>(ceil(count[i] * scaleFactor)); // Round up the scaled down count and store in c2
 
-	printHorizonalLine(); // Print the horizontal line
-
-	/* 
-	Display the bar graph
-	*/
-	for (int i = scale; i > 0; i--) { // Loop from the top of the graph to the bottom
-		std::cout << "|";
-		for (int j = 0; j < 256; j++) {
-			if (c2[j] >= i)
-				std::cout << "*"; // Print * if the scaled down count is greater than or equal to the current row
-			else
-				std::cout << " "; // Print space otherwise
+	if (gFlag == 0) {
+		printHorizonalLine(); // Print the horizontal line
+		/*
+		Display the bar graph
+		*/
+		for (int i = scale; i > 0; i--) { // Loop from the top of the graph to the bottom
+			std::cout << "|";
+			for (int j = 0; j < 256; j++) {
+				if (c2[j] >= i)
+					std::cout << "*"; // Print * if the scaled down count is greater than or equal to the current row
+				else
+					std::cout << " "; // Print space otherwise
+			}
+			std::cout << "|";
+			std::cout << endl;
 		}
-		std::cout << "|";
-		std::cout << endl;
-	}
-
-	printHorizonalLine(); // Print the horizontal line
-	if(nFlag == 1) {
-		printNumberScale(); // Print the number scale
-	}
-	if(aFlag == 1) {
-		printASCIIScale();	// Print the ASCII scale
+		printHorizonalLine(); // Print the horizontal line
+		if (nFlag == 1) {
+			printNumberScale(); // Print the number scale
+		}
+		if (aFlag == 1) {
+			printASCIIScale();	// Print the ASCII scale
+		}
+		cout << endl;
 	}
 	
-	cout << endl;
+	//double variance = 0.0;
+	//double standDev = 0.0;
+	//unsigned long long countSumSq = 0;
+	//unsigned long long countSumSqTotal = 0;
+	//for (int i = 0; i < 256; i++) {
+	//	countSumSq = countSumSq + (count[i] * count[i]);
+	//}
+	//countSumSqTotal = sum * sum;
+	//variance = static_cast<double>(countSumSq - (countSumSqTotal / 256)) / 256;
+	//standDev = sqrt(variance);
 	
-	double variance = 0.0;
-	double standDev = 0.0;
-	unsigned long long countSumSq = 0;
-	unsigned long long countSumSqTotal = 0;
-	for (int i = 0; i < 256; i++) {
-		countSumSq = countSumSq + (count[i] * count[i]);
-	}
-
-	countSumSqTotal = sum * sum;
-	variance = static_cast<double>(countSumSq - (countSumSqTotal / 256)) / 256;
-	standDev = sqrt(variance);
 	//cout << "countSumSq: " << countSumSq << endl;
 	//cout << "countSumSqTotal: " << countSumSqTotal << endl;
 	//cout << "(countSumSqTotal / 256):" << (countSumSqTotal / 256) << endl;
-
 	//cout << "countSumSq - (countSumSqTotal / 256):" << countSumSq - (countSumSqTotal / 256) << endl;
-	cout << "MIN:" <<minRepeated<<" MAX  "<< "("<<maxChar<<"):" <<maxRepeated<< " AVG:" << average << " DEV:" << standDev;
 
+	double standDev = stndrdDev(count);
+
+	cout << "MIN:";
+	cout << setw(9) << setfill(' ') << right << minRepeated;
+	cout << " MAX  (";
+	cout << setw(3) << setfill('0') << maxChar;
+	cout << "):";
+	cout << setw(9) << setfill(' ') << maxRepeated;
+	cout << " AVG:";
+	cout << setw(9) << setfill(' ') << average;
+	cout << " DEV:";
+	cout << setw(9) << setfill(' ') << standDev;
 	return 0;
 }
 /*
 printNumberScale function takes in no input and prints the number scale
 */
+
+double stndrdDev(unsigned int count[]) {
+	long long sum = 0;
+	double mean = 0.0;
+	double sqOfDiff = 0.0;
+	for (int i = 0; i < 256; i++)
+		sum = sum + count[i];
+	mean = (double) sum / 256;
+	for (int i = 0; i < 256; i++) {
+		double difference = count[i] - mean;
+		sqOfDiff = sqOfDiff + difference * difference;
+	}
+	double variance = sqOfDiff / 256;
+	double standardDeviaton = sqrt(variance);
+	return standardDeviaton;
+}
 
 void printNumberScale() {
 	std::cout << "|";
@@ -218,7 +246,6 @@ void printNumberScale() {
 	std::cout << "|";
 	std::cout << endl;
 }
-
 /*
 printASCIIScale function takes in no input and prints the ASCII scale
 */
@@ -233,7 +260,6 @@ void printASCIIScale() {////Need to figure out if this is actully correct>>>>>>>
 	std::cout << "|";
 	std::cout << endl;
 }
-
 /*
 printHorizonalLine function takes in no input and prints a horizontal line
 */
